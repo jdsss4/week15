@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuberculosis</title>
+    <style>
+        /* =========================================
+           0. IMPORT CUSTOM FONTS (MaruBuri)
+        ========================================= */
+        @font-face {
+            font-family: 'MaruBuri';
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-ExtraLight.woff2) format('woff2');
+            font-weight: 200;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'MaruBuri';
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Light.woff2) format('woff2');
+            font-weight: 300;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'MaruBuri';
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2) format('woff2');
+            font-weight: 400;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'MaruBuri';
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff2) format('woff2');
+            font-weight: 600;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'MaruBuri';
+            src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2) format('woff2');
+            font-weight: 700;
+            font-display: swap;
+        }
+
+        /* =========================================
+           1. CUSTOMIZATION VARIABLES
+        ========================================= */
+        :root {
+            --font-main: 'MaruBuri', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+            --bg-page: #fcf3e3;
+            --text-dark: #000000;
+            --text-light: #ffffff;
+
+            --card-1-bg: #bc1c1a;
+            --card-2-bg: #fdbf4a;
+            --card-3-bg: #42aa8b;
+        }
+
+        /* =========================================
+           2. GENERAL SETUP
+        ========================================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            word-break: keep-all;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dummy-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #888;
+        }
+
+        /* =========================================
+           3. SCROLL TIMELINE STRUCTURE
+        ========================================= */
+        .scroll-section {
+            height: 400vh;
+            position: relative;
+        }
+
+        .sticky-wrapper {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* =========================================
+           4. TITLE INTRO
+        ========================================= */
+        .intro-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            will-change: transform;
+            z-index: 10;
+            transform-origin: top center;
+        }
+
+        .intro-content h3 {
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            font-weight: 700;
+            max-width: 1200px;
+            letter-spacing: -0.02em;
+            line-height: 2;
+            color: var(--text-dark);
+        }
+
+        /* =========================================
+           5. CARDS STYLING
+        ========================================= */
+        .card {
+            position: absolute;
+            left: 5%;
+            right: 5%;
+            top: 0;
+
+            height: auto;
+            min-height: 50vh;
+
+            display: flex;
+            flex-direction: column;
+
+            clip-path: polygon(40px 0%, 100% 0%,
+                    100% calc(100% - 40px), calc(100% - 40px) 100%,
+                    0% 100%, 0% 40px);
+            box-shadow: none;
+
+            transform-origin: top center;
+            will-change: transform;
+
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+
+            /* Hidden below the screen natively */
+            transform: translate3d(0, 100vh, 0) scale(1);
+        }
+
+        #card1 {
+            background-color: var(--card-1-bg);
+            z-index: 1;
+        }
+
+        #card2 {
+            background-color: var(--card-2-bg);
+            z-index: 2;
+        }
+
+        #card3 {
+            background-color: var(--card-3-bg);
+            z-index: 3;
+        }
+
+        .card-content-overlay {
+            position: relative;
+            z-index: 1;
+            padding: 3rem 4rem 4rem 4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            width: 100%;
+            color: var(--text-light);
+        }
+
+        .card-title {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .card-text {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        /* =========================================
+           6. RESPONSIVE DESIGN (DYNAMIC LAYOUT)
+        ========================================= */
+        @media (min-width: 1100px) {
+            .card-content-overlay {
+                flex-direction: row;
+                gap: 4rem;
+            }
+
+            .card-title {
+                flex: 1;
+            }
+
+            .card-body {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .card {
+                padding: 0;
+            }
+
+            .card-content-overlay {
+                padding: 2rem;
+                gap: 2rem;
+            }
+
+            .card-title {
+                font-size: 2.2rem;
+            }
+
+            .card-text {
+                font-size: 1.5rem;
+            }
+        }
+
+        .contents {
+            width: 1000px;
+            margin: auto;
+            padding: 0px;
+        }
+
+        h1 {
+            font-size: 11rem;
+            font-weight: 700;
+            color: #bc1c1a;
+        }
+
+        h2 {
+            font-size: 4rem;
+            font-weight: 700;
+        }
+
+        /* =========================================
+           7. SCROLL HIGHLIGHT EFFECT
+        ========================================= */
+        .highlight-wrapper {
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .highlight-base {
+            color: var(--text-light);
+        }
+
+        .highlight-active {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            color: #000000;
+            clip-path: inset(0 100% 0 0);
+            z-index: 1;
+        }
+
+        .highlight-active::before {
+            content: "";
+            position: absolute;
+            top: -4px;
+            bottom: -4px;
+            left: -12px;
+            right: -12px;
+            background-color: #fdbf4a;
+            z-index: -1;
+            transform: rotate(-1deg);
+            border-radius: 4px;
+        }
+
+        /* =========================================
+           8. QUESTION MARK ANIMATION
+        ========================================= */
+        .qm-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 0.6em; /* Matches the normal space of a question mark */
+            height: 1em;  /* Anchors it to the line height */
+        }
+
+        .question-mark {
+            position: absolute;
+            left: 50%;
+            top: 65%; /* Tweak this slightly up or down to perfect the baseline alignment! */
+            font-size: 400%; /* Renders natively 4x larger */
+            
+            transform-origin: center center;
+            /* Perfectly centers the huge box, then scales it down */
+            transform: translate(-50%, -50%) scale(0.25);
+            will-change: transform, color;
+            line-height: 1;
+        }
+
+        /* =========================================
+           9. TILE LINK ANIMATIONS
+        ========================================= */
+        @keyframes periodic-shake {
+            0%, 85%, 100% { transform: rotate(0deg); }
+            88% { transform: rotate(3deg); }
+            91% { transform: rotate(-3deg); }
+            94% { transform: rotate(3deg); }
+            97% { transform: rotate(-3deg); }
+        }
+
+        .tile-link {
+            display: block;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+        }
+
+        .tile-link img {
+            display: block;
+            animation: periodic-shake 4s infinite ease-in-out;
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        /* Offsets the animation so they do not shake at the exact same time */
+        .tile-link.delay-shake img {
+            animation-delay: 2s;
+        }
+
+        /* Hover effect: stops the shake and lifts the card */
+        .tile-link:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .tile-link:hover img {
+            animation: none;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header>
+    </header>
+
+    <section>
+        <div style="margin-bottom: -10vh;">
+            <img src="mycobacterium1.png" style="display: block; width: 100vw; height: auto;">
+        </div>
+    </section>
+
+    <section>
+        <div class="scroll-section" id="scroll-section">
+            <div class="sticky-wrapper">
+
+                <div class="intro-content" id="intro-content">
+                    <h3>이는 인류 역사상 가장 치명적인 어느 감염병에 대한 이야기입니다.</h3>
+                </div>
+
+                <div class="card" id="card1">
+                    <div class="card-content-overlay">
+                        <div class="card-title">이 질병은 줄곧 우리 곁을 맴돌았습니다.</div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <p>인류가 호모 사피엔스로 진화하기도 전인 300만 년 전부터입니다. 고대 이집트의 미라에서도 그 흔적이 발견되며 히브리어 성경 기록에서도 찾아볼 수 있을 정도로 오랜 역사를 지니고 있죠.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="card2">
+                    <div class="card-content-overlay">
+                        <div class="card-title" style="color: black;">의학의 발전에도 불구하고 말이죠.</div>
+                        <div class="card-body">
+                            <div class="card-text" style="color: black;">
+                                <p>백신과 항생제가 수많은 이들의 목숨을 구했음에 불구하고 작년 이 질병으로 사망한 사람의 수는 말라리아, 장티푸스, 콜레라, 살인, 전쟁을 합친 것보다 많았습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="card3">
+                    <div class="card-content-overlay">
+                        <div class="card-title">이 병은 다양한 이름으로 불려왔습니다.</div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <p>고대 중국에서는 파괴된 궁전인 '괴부'로, 고대 히브리어론 서서히 말라가는 몸이란 뜻의 '샤헤페트'로, 19세기 유럽에선 신체를 갉아먹는 '소모증'이라 이름지었죠.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="contents">
+            <h2 style="padding-top: 300px; text-align: right;">오늘날 우리는 이 전염병을</h2>
+            <div style="display: flex; align-items: flex-start; justify-content: flex-end; text-align: right;">
+                <h1 style="margin: 0; line-height: 1.4em;">결핵</h1>
+                <h2 style="margin: 0; line-height: 2.1em;">이라 부릅니다.</h2>
+            </div>
+            <img src="lungs1.png" style="padding-bottom: 300px;">
+        </div>
+    </section>
+
+    <section style="background-color: #bc1c1a;">
+        <div class="contents">
+            <h2 style="color: #fcf3e3; padding-top: 30vh; padding-bottom: 30vh; line-height: 1.6;">
+                심지어 우리는 결핵을<br>
+                <span class="highlight-wrapper">
+                    <span class="highlight-base">완치하는 법</span>
+                    <span class="highlight-active" aria-hidden="true">완치하는 법</span>
+                </span>까지 알고 있습니다.
+            </h2>
+        </div>
+    </section>
+
+    <section>
+        <div class="contents">
+            <h2 style="padding-top: 400px; padding-bottom: 400px;">
+                그렇다면 왜 아직도 이토록 수많은 사람이 결핵으로 죽는 걸까요<span class="qm-wrapper"><span class="question-mark">?</span></span>
+            </h2>
+        </div>
+    </section>
+
+    <section style="background-color: black;">
+        <div class="contents">
+            <h2 style="color: white; padding-top: 200px; padding-bottom: 60px; padding-left: 200px; width: 800px;">오늘 우리는 결핵을 파헤칩니다.</h2>
+            <p style="font-size: 2rem; font-weight: 600; line-height: 2em; color: white; padding-bottom: 200px; padding-left: 200px; width: 800px;">
+                이 질병에 대한 우리의 이해가 문화와 함께 어떻게 발전해 왔는지, 나아가 우리가 어떤 문제에 직면해 있는지 이야기합니다.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="contents">
+            <div style="display: flex; padding-top: 200px; padding-bottom: 300px;">
+                <a href="beauty.html" target="_blank" class="tile-link" style="margin-left: 24px;">
+                    <img src="tile1.png" style="width: auto; height: 419px;">
+                </a>
+                <a href="medicine.html" target="_blank" class="tile-link delay-shake" style="margin-left: 81px;">
+                    <img src="tile2.png" style="width: auto; height: 419px;">
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer style="background-color: gray;">
+        <div class="contents">
+            <h2 style="color: white; padding: 200px 0; text-align: center;">Footer</h2>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const section = document.getElementById('scroll-section');
+            const title = document.getElementById('intro-content');
+            const card1 = document.getElementById('card1');
+            const card2 = document.getElementById('card2');
+            const card3 = document.getElementById('card3');
+
+            const highlightWrapper = document.querySelector('.highlight-wrapper');
+            const highlightActive = document.querySelector('.highlight-active');
+            
+            // --- Question Mark Variable ---
+            const questionMark = document.querySelector('.question-mark');
+
+            let gap1 = 120;
+            let gap2 = 120;
+
+            function updateGap() {
+                const title1 = document.querySelector('#card1 .card-title');
+                const title2 = document.querySelector('#card2 .card-title');
+                const body1 = document.querySelector('#card1 .card-body');
+                const body2 = document.querySelector('#card2 .card-body');
+
+                if (!title1 || !title2 || !body1 || !body2) return;
+
+                const isDesktop = window.innerWidth >= 1100;
+                const isMobile = window.innerWidth <= 900;
+
+                const paddingTop = isMobile ? 32 : 48;
+                let verticalGap = 0;
+
+                const overlay1 = document.querySelector('#card1 .card-content-overlay');
+                const isRow = window.getComputedStyle(overlay1).flexDirection === 'row';
+
+                if (isRow) {
+                    verticalGap = 16;
+                    gap1 = Math.max(title1.offsetHeight, body1.offsetHeight) + paddingTop + verticalGap;
+                    gap2 = Math.max(title2.offsetHeight, body2.offsetHeight) + paddingTop + verticalGap;
+                } else {
+                    verticalGap = isMobile ? 32 : 48;
+                    gap1 = title1.offsetHeight + paddingTop + verticalGap;
+                    gap2 = title2.offsetHeight + paddingTop + verticalGap;
+                }
+            }
+
+            function mapRange(value, inMin, inMax, outMin, outMax) {
+                if (value <= inMin) return outMin;
+                if (value >= inMax) return outMax;
+                const scrollDistance = (value - inMin) / (inMax - inMin);
+                return outMin + ((outMax - outMin) * scrollDistance);
+            }
+
+            function handleScroll() {
+                const rect = section.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                const scrollableDistance = rect.height - windowHeight;
+                let progress = scrollableDistance > 0 ? (-rect.top / scrollableDistance) : 0;
+                progress = Math.max(0, Math.min(1, progress));
+
+                const currentCardHeight = card3.offsetHeight;
+
+                let adjGap1 = gap1;
+                let adjGap2 = gap2;
+                let totalStackHeight = currentCardHeight + adjGap1 + adjGap2;
+
+                const minBaseTop = windowHeight < 600 ? 15 : 30;
+                const availableHeight = windowHeight - minBaseTop - 30;
+
+                if (totalStackHeight > availableHeight) {
+                    const overflow = totalStackHeight - availableHeight;
+                    const reduction = overflow / 2;
+                    adjGap1 = Math.max(50, gap1 - reduction);
+                    adjGap2 = Math.max(50, gap2 - reduction);
+                    totalStackHeight = currentCardHeight + adjGap1 + adjGap2;
+                }
+
+                let baseTop = windowHeight * 0.10;
+                let maxBaseTop = windowHeight - totalStackHeight - 30;
+
+                if (baseTop > maxBaseTop) { baseTop = maxBaseTop; }
+                if (baseTop < minBaseTop) { baseTop = minBaseTop; }
+
+                const finalScale = 0.98;
+
+                const titleScale = mapRange(progress, 0.0, 0.10, 1, 0.65);
+                const titleScrollDuration = 0.30 * windowHeight / (windowHeight - baseTop);
+                const titleScrollEnd = 0.10 + titleScrollDuration;
+                const titleY = mapRange(progress, 0.10, titleScrollEnd, 0, -windowHeight);
+                title.style.transform = `translate3d(0, ${titleY}px, 0) scale(${titleScale})`;
+
+                const card1Y = mapRange(progress, 0.0, 0.25, windowHeight, baseTop);
+                const card2Y = mapRange(progress, 0.35, 0.55, windowHeight, baseTop + adjGap1);
+                const card3Y = mapRange(progress, 0.60, 0.80, windowHeight, baseTop + adjGap1 + adjGap2);
+
+                const card1Scale = mapRange(progress, 0.35, 1.0, 1, finalScale);
+                const card2Scale = mapRange(progress, 0.65, 1.0, 1, finalScale);
+                const card3Scale = mapRange(progress, 0.90, 1.0, 1, finalScale);
+
+                card1.style.transform = `translate3d(0, ${card1Y}px, 0) scale(${card1Scale})`;
+                card2.style.transform = `translate3d(0, ${card2Y}px, 0) scale(${card2Scale})`;
+                card3.style.transform = `translate3d(0, ${card3Y}px, 0) scale(${card3Scale})`;
+            }
+
+            function handleHighlightScroll() {
+                if (!highlightWrapper || !highlightActive) return;
+
+                const rect = highlightWrapper.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                const normalizedY = (rect.top + rect.height / 2) / windowHeight;
+                const scrollProgress = 1 - normalizedY; 
+
+                let rightInset = 100;
+                let leftInset = 0;
+
+                const revealStart = 0.25;
+                const revealEnd = 0.45;  
+                const hideStart = 0.55;  
+                const hideEnd = 0.75;    
+
+                if (scrollProgress < revealStart) {
+                    rightInset = 100;
+                    leftInset = 0;
+                } else if (scrollProgress >= revealStart && scrollProgress < revealEnd) {
+                    let p = (scrollProgress - revealStart) / (revealEnd - revealStart);
+                    rightInset = 100 - (100 * p);
+                    leftInset = 0;
+                } else if (scrollProgress >= revealEnd && scrollProgress < hideStart) {
+                    rightInset = 0;
+                    leftInset = 0;
+                } else if (scrollProgress >= hideStart && scrollProgress < hideEnd) {
+                    let p = (scrollProgress - hideStart) / (hideEnd - hideStart);
+                    rightInset = 0;
+                    leftInset = 100 * p;
+                } else if (scrollProgress >= hideEnd) {
+                    rightInset = 0;
+                    leftInset = 100;
+                }
+
+                highlightActive.style.clipPath = `inset(0% ${rightInset}% 0% ${leftInset}%)`;
+            }
+
+            // --- Question Mark Scroll Logic ---
+            function handleQuestionMarkScroll() {
+                if (!questionMark) return;
+
+                const rect = questionMark.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                // Animation occurs when the element is between 80% and 40% of the screen height
+                const startY = windowHeight * 0.6; 
+                const endY = windowHeight * 0.3;
+
+                let progress = (startY - rect.top) / (startY - endY);
+                progress = Math.max(0, Math.min(1, progress)); // Clamp between 0 and 1
+
+                // Target Transformations
+                const dropDistance = progress * 150; // Drops 150px down
+                const rotation = progress * 180;     // Rotates 0 to 180deg
+
+                // Scales from 0.25 (normal size) up to 1 (its native giant size)
+                const scale = 0.25 + (progress * 0.75);
+
+                // Target Color Interpolation: Black (0,0,0) to #bc1c1a (188, 28, 26)
+                const r = Math.round(progress * 188);
+                const g = Math.round(progress * 28);
+                const b = Math.round(progress * 26);
+
+                // Apply styles
+                // Apply styles
+                questionMark.style.transform = `translate(-50%, -50%) translateY(${dropDistance}px) rotate(${rotation}deg) scale(${scale})`;
+                questionMark.style.color = `rgb(${r}, ${g}, ${b})`;
+            }
+
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        handleScroll();
+                        handleHighlightScroll();
+                        handleQuestionMarkScroll(); // <-- Executing the animation
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                updateGap();
+                handleScroll();
+                handleHighlightScroll();
+                handleQuestionMarkScroll(); // <-- Executing the animation
+            });
+
+            updateGap();
+            handleScroll();
+            handleHighlightScroll();
+            handleQuestionMarkScroll();
+
+            window.addEventListener('load', () => {
+                updateGap();
+                handleScroll();
+                handleHighlightScroll();
+                handleQuestionMarkScroll();
+            });
+        });
+    </script>
+</body>
+
+</html>
